@@ -80,4 +80,27 @@ async function removeFromCart(cartItemId) {
   }
 }
 
+async function clearCart() {
+  const userId = localStorage.getItem('user_id');
+  if (!userId) return;
+
+  const { error } = await supabase
+    .from('cart_items')
+    .delete()
+    .eq('user_id', userId);
+
+  if (error) {
+    alert("Failed to clear cart.");
+  } else {
+    loadCart();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const clearBtn = document.getElementById('clear-cart-btn');
+  if (clearBtn) {
+    clearBtn.addEventListener('click', clearCart);
+  }
+});
+
 loadCart();
