@@ -1,40 +1,43 @@
 // Supabase client setup
 const SUPABASE_URL = 'https://yjvgdixcrzratbzkmgty.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqdmdkaXhjcnpyYXRiemttZ3R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4MjcyMzMsImV4cCI6MjA2NjQwMzIzM30.iMsJ0bFZvy2SFNg49AdtXr8RvwJaLepNeTCMGgi1vns';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Signup form
 const form = document.getElementById('signup-form');
 const errorMsg = document.getElementById('error-message');
+const submitBtn = form.querySelector('button[type="submit"]');
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   errorMsg.textContent = '';
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Signing up...';
 
-  const emailInput = document.getElementById('email');
-  const passwordInput = document.getElementById('password');
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value.trim();
 
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
-
-  // Client-side validation
+  // ✅ Basic Validation
   if (!email || !password) {
     errorMsg.textContent = "Email and password are required.";
+    resetButton();
     return;
   }
 
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     errorMsg.textContent = "Please enter a valid email address.";
+    resetButton();
     return;
   }
 
   if (password.length < 6) {
     errorMsg.textContent = "Password must be at least 6 characters.";
+    resetButton();
     return;
   }
 
   try {
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await client.auth.signUp({
       email,
       password
     });
@@ -42,11 +45,18 @@ form.addEventListener('submit', async (e) => {
     if (error) {
       errorMsg.textContent = error.message;
     } else {
-      alert("Signup successful! Please check your email for verification.");
+      alert("✅ Signup successful! Please verify your email.");
       window.location.href = "login.html";
     }
   } catch (err) {
     console.error("Signup error:", err);
-    errorMsg.textContent = "Something went wrong. Try again.";
+    errorMsg.textContent = "Something went wrong. Please try again.";
+  } finally {
+    resetButton();
   }
 });
+
+function resetButton() {
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Sign Up';
+}
