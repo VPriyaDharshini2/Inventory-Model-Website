@@ -1,4 +1,4 @@
-// Supabase config
+// Cart JS
 const SUPABASE_URL = 'https://yjvgdixcrzratbzkmgty.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqdmdkaXhjcnpyYXRiemttZ3R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4MjcyMzMsImV4cCI6MjA2NjQwMzIzM30.iMsJ0bFZvy2SFNg49AdtXr8RvwJaLepNeTCMGgi1vns';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -7,17 +7,16 @@ async function checkUser() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
         alert("Please log in to view your cart.");
-        window.location.href = 'login.html'; // or redirect appropriately
+        window.location.href = 'login.html'; 
     }
     currentUser = user;
 }
 
-// Step 3: Fetch the user's cart from Supabase
 async function fetchCartFromDB() {
     const { data, error } = await supabase
         .from('carts')
         .select('*')
-        .eq('user_id', currentUser.id); // Ensure you are using RLS on user_id
+        .eq('user_id', currentUser.id); 
 
     if (error) {
         console.error("Error fetching cart:", error.message);
@@ -26,7 +25,6 @@ async function fetchCartFromDB() {
     return data;
 }
 
-// Step 4: Display the cart
 function displayCart(cartItems) {
     const cartList = document.getElementById('cart-items');
     const totalDisplay = document.getElementById('cart-total');
@@ -43,9 +41,7 @@ function displayCart(cartItems) {
     totalDisplay.textContent = `Total: $${total.toFixed(2)}`;
 }
 
-// Step 5: Optionally save/update cart item
 async function addToCartDB(productId, productName, price, quantity = 1) {
-    // Check if item already exists
     const { data: existingItems, error: fetchError } = await supabase
         .from('carts')
         .select('*')
@@ -59,7 +55,6 @@ async function addToCartDB(productId, productName, price, quantity = 1) {
     }
 
     if (existingItems) {
-        // Update quantity
         const { error: updateError } = await supabase
             .from('carts')
             .update({ quantity: existingItems.quantity + quantity })
@@ -67,7 +62,6 @@ async function addToCartDB(productId, productName, price, quantity = 1) {
 
         if (updateError) console.error("Update error:", updateError.message);
     } else {
-        // Insert new
         const { error: insertError } = await supabase
             .from('carts')
             .insert([
@@ -84,7 +78,6 @@ async function addToCartDB(productId, productName, price, quantity = 1) {
     }
 }
 
-// Step 6: Load cart on page load
 document.addEventListener('DOMContentLoaded', async () => {
     await checkUser();
     const cartItems = await fetchCartFromDB();
