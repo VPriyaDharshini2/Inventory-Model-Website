@@ -35,17 +35,34 @@ form.addEventListener('submit', async (e) => {
   }
 
   try {
-    const { data, error } = await client.auth.signUp({
-      email,
-      password
-    });
+    const { data: existingUsers, error: fetchError } = await client
+      .from('users')
+      .select('id')
+      .eq('email', email);
+
+    if (fetchError) {
+      throw fetchError;
+    }
+
+    if (existingUsers.length > 0) {
+      errorMsg.textContent = "An account with this email already exists.";
+      resetButton();
+      return;
+    }
+
+    const { data, error } = await client
+      .from('users')
+      .insert([
+        { email: email, password: password, role: 'user' }
+      ]);
 
     if (error) {
-      errorMsg.textContent = error.message;
-    } else {
-      alert("✅ Signup successful! Please verify your email.");
-      window.location.href = "login.html";
+      throw error;
     }
+
+    alert(" Signup successful! You can now log in.");
+    window.location.href = "login.html";
+
   } catch (err) {
     console.error("Signup error:", err);
     errorMsg.textContent = "Something went wrong. Please try again.";
