@@ -11,18 +11,42 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
   errorMsg.textContent = '';
 
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value.trim();
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
 
-  const { error } = await supabase.auth.signUp({
-    email,
-    password
-  });
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
 
-  if (error) {
-    errorMsg.textContent = error.message;
-  } else {
-    alert("Signup successful! Please verify your email if required.");
-    window.location.href = "login.html";
+  // Client-side validation
+  if (!email || !password) {
+    errorMsg.textContent = "Email and password are required.";
+    return;
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errorMsg.textContent = "Please enter a valid email address.";
+    return;
+  }
+
+  if (password.length < 6) {
+    errorMsg.textContent = "Password must be at least 6 characters.";
+    return;
+  }
+
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password
+    });
+
+    if (error) {
+      errorMsg.textContent = error.message;
+    } else {
+      alert("Signup successful! Please check your email for verification.");
+      window.location.href = "login.html";
+    }
+  } catch (err) {
+    console.error("Signup error:", err);
+    errorMsg.textContent = "Something went wrong. Try again.";
   }
 });
