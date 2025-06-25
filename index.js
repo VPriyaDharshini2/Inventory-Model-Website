@@ -1,78 +1,63 @@
-    // Index JS
-    const SUPABASE_URL = 'https://yjvgdixcrzratbzkmgty.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqdmdkaXhjcnpyYXRiemttZ3R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4MjcyMzMsImV4cCI6MjA2NjQwMzIzM30.iMsJ0bFZvy2SFNg49AdtXr8RvwJaLepNeTCMGgi1vns';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// index.js
+const SUPABASE_URL = 'https://yjvgdixcrzratbzkmgty.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqdmdkaXhjcnpyYXRiemttZ3R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4MjcyMzMsImV4cCI6MjA2NjQwMzIzM30.iMsJ0bFZvy2SFNg49AdtXr8RvwJaLepNeTCMGgi1vns';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+async function loadProducts() {
+const container = document.getElementById('products-container');
+  if (!container) {
+    console.error("Element with id 'product-container' not found.");
+    return;
+  }
 
-    async function fetchProducts() {
-    console.log("Fetching products from Supabase...");
-    const { data: products, error } = await supabase
-        .from('products')
-        .select('*');
+  container.innerHTML = 'Loading...';
 
-    if (error) {
-        console.error('Error fetching products:', error.message);
-        document.getElementById('products-container').innerHTML =
-        '<p style="color: red;">Failed to load products. Check console.</p>';
-        return;
-    }
+  const { data, error } = await supabase
+    .from('products')
+    .select('*');
 
-    console.log("Products fetched:", products);
-    displayProducts(products);
-    }
+  if (error) {
+    console.error('Supabase error:', error.message);
+    container.textContent = "Failed to load products. " + error.message;
+    return;
+  }
 
-    function displayProducts(products) {
-    const container = document.getElementById('products-container');
-    container.innerHTML = '';
+  if (!data || data.length === 0) {
+    container.textContent = "No products available.";
+    return;
+  }
 
-    products.forEach(product => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
+  container.innerHTML = '';
+  data.forEach(product => {
+    const div = document.createElement('div');
+    div.className = 'product-card';
+    div.innerHTML = `
+      <img src="${product.image_url}" alt="${product.name}" />
+      <h3>${product.name}</h3>
+      <p>₹${product.price}</p>
+      <button onclick="addToCart('${product.id}')">Add to Cart</button>
+    `;
+    container.appendChild(div);
+  });
+}
 
-        card.innerHTML = `
-        <img src="${product.image_url}" alt="${product.name}" />
-        <h3>${product.name}</h3>
-        <p>₹${product.price.toFixed(2)}</p>
-        <button onclick="addToCart(${product.id}, '${product.name}', ${product.price})">
-            Add to Cart
-        </button>
-        `;
+async function addToCart(productId) {
+  const userId = localStorage.getItem('user_id');
+  if (!userId) {
+    alert('Please login first.');
+    return;
+  }
 
-        container.appendChild(card);
-    });
-    }
+  const { error } = await supabase
+    .from('cart_items')
+    .insert([{ user_id: userId, product_id: productId, quantity: 1 }]);
 
-    function addToCart(productId, name, price) {
-    const existingItem = cart.find(item => item.productId === productId);
+  if (error) {
+    console.error('Error adding to cart:', error.message);
+    alert("Error adding to cart.");
+  } else {
+    alert("Product added to cart!");
+  }
+}
 
-    if (existingItem) {
-        existingItem.quantity += 1;
-    } else {
-        cart.push({ productId, name, price, quantity: 1 });
-    }
-
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartSummary();
-    }
-
-    function updateCartSummary() {
-    const cartDetails = document.getElementById('cart-details');
-    const checkoutBtn = document.getElementById('checkout-btn');
-
-    if (cart.length === 0) {
-        cartDetails.textContent = 'No items in cart';
-        checkoutBtn.disabled = true;
-        return;
-    }
-
-    const itemsText = cart.map(item => `${item.name} x${item.quantity}`).join(', ');
-    cartDetails.textContent = itemsText;
-    checkoutBtn.disabled = false;
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-    fetchProducts();
-    updateCartSummary();
-    });
-
+document.addEventListener('DOMContentLoaded', loadProducts);
