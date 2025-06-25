@@ -1,13 +1,10 @@
-    // Replace these with your own project values from Supabase dashboard
+    // Index JS
     const SUPABASE_URL = 'https://yjvgdixcrzratbzkmgty.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqdmdkaXhjcnpyYXRiemttZ3R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4MjcyMzMsImV4cCI6MjA2NjQwMzIzM30.iMsJ0bFZvy2SFNg49AdtXr8RvwJaLepNeTCMGgi1vns';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-
-    // Local cart
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    // Fetch products from Supabase
     async function fetchProducts() {
     console.log("Fetching products from Supabase...");
     const { data: products, error } = await supabase
@@ -25,8 +22,6 @@
     displayProducts(products);
     }
 
-
-    // Display product cards
     function displayProducts(products) {
     const container = document.getElementById('products-container');
     container.innerHTML = '';
@@ -48,7 +43,6 @@
     });
     }
 
-    // Add to cart
     function addToCart(productId, name, price) {
     const existingItem = cart.find(item => item.productId === productId);
 
@@ -62,7 +56,6 @@
     updateCartSummary();
     }
 
-    // Update cart summary
     function updateCartSummary() {
     const cartDetails = document.getElementById('cart-details');
     const checkoutBtn = document.getElementById('checkout-btn');
@@ -78,7 +71,6 @@
     checkoutBtn.disabled = false;
     }
 
-    // Initialize
     document.addEventListener('DOMContentLoaded', () => {
     fetchProducts();
     updateCartSummary();
