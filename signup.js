@@ -3,7 +3,6 @@ const SUPABASE_URL = 'https://yjvgdixcrzratbzkmgty.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqdmdkaXhjcnpyYXRiemttZ3R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4MjcyMzMsImV4cCI6MjA2NjQwMzIzM30.iMsJ0bFZvy2SFNg49AdtXr8RvwJaLepNeTCMGgi1vns';
 const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Signup form
 const form = document.getElementById('signup-form');
 const errorMsg = document.getElementById('error-message');
 const submitBtn = form.querySelector('button[type="submit"]');
@@ -17,7 +16,6 @@ form.addEventListener('submit', async (e) => {
   const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value.trim();
 
-  // ✅ Basic Validation
   if (!email || !password) {
     errorMsg.textContent = "Email and password are required.";
     resetButton();
