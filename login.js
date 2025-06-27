@@ -53,7 +53,7 @@ form.addEventListener('submit', async (e) => {
     alert(` Logged in as ${user.role}`);
 
     if (user.role === 'admin') {
-      window.location.href = "admin-dashboard.html"; 
+      window.location.href = "admin.html"; 
     } else {
       window.location.href = "index.html"; 
     }
