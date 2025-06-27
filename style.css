@@ -150,21 +150,27 @@ nav ul li a.active {
   padding: 1rem 2rem;
 }
 
-#checkout-btn {
+.view-cart-btn {
   background-color: var(--primary-color);
   color: white;
-  padding: 0.6rem 1.2rem;
+  padding: 10px 20px;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
-  font-weight: 600;
-  transition: background 0.3s ease;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
 }
 
-#checkout-btn:disabled {
-  background-color: #d1d5db;
+.view-cart-btn:hover {
+  background-color: #4338ca;
+}
+
+.view-cart-btn:disabled {
+  background-color: #ccc;
   cursor: not-allowed;
 }
+
 
 .cart-grid {
   display: flex;

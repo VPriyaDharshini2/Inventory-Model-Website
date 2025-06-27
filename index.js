@@ -84,12 +84,12 @@ async function addToCart(productId) {
 
 async function updateCartSummary() {
   const cartDetails = document.getElementById('cart-details');
-  const checkoutBtn = document.getElementById('checkout-btn');
+  const viewCartBtn = document.getElementById('view-cart-btn');
   const userId = localStorage.getItem('user_id');
 
   if (!userId) {
     cartDetails.textContent = "No items in cart";
-    checkoutBtn.disabled = true;
+    viewCartBtn.disabled = true;
     return;
   }
 
@@ -100,7 +100,7 @@ async function updateCartSummary() {
 
   if (error || !data) {
     cartDetails.textContent = "Failed to load cart";
-    checkoutBtn.disabled = true;
+    viewCartBtn.disabled = true;
     return;
   }
 
@@ -108,11 +108,15 @@ async function updateCartSummary() {
 
   if (itemCount > 0) {
     cartDetails.textContent = `${itemCount} item${itemCount > 1 ? 's' : ''} in cart`;
-    checkoutBtn.disabled = false;
+    viewCartBtn.disabled = false;
   } else {
     cartDetails.textContent = "No items in cart";
-    checkoutBtn.disabled = true;
+    viewCartBtn.disabled = true;
   }
+
+  viewCartBtn.addEventListener('click', () => {
+    window.location.href = 'cart.html';
+  });
 }
 
 loadProducts();
