@@ -270,6 +270,16 @@ nav ul li a.active {
   margin-top: -0.5rem;
 }
 
+/* Admin Dashboard */
+.product-card p span {
+  font-weight: bold;
+}
+
+.product-card button {
+  margin-top: 0.5rem;
+}
+
+/* Responsive Layout */
 @media (max-width: 600px) {
   .cart-summary {
     flex-direction: column;
