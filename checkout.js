@@ -1,9 +1,16 @@
 // checkout.js
-const SUPABASE_URL = 'https://yjvgdixcrzratbzkmgty.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqdmdkaXhjcnpyYXRiemttZ3R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4MjcyMzMsImV4cCI6MjA2NjQwMzIzM30.iMsJ0bFZvy2SFNg49AdtXr8RvwJaLepNeTCMGgi1vns';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const { createClient } = window.supabase;
+const supabaseUrl = 'https://yjvgdixcrzratbzkmgty.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqdmdkaXhjcnpyYXRiemttZ3R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4MjcyMzMsImV4cCI6MjA2NjQwMzIzM30.iMsJ0bFZvy2SFNg49AdtXr8RvwJaLepNeTCMGgi1vns';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
-const userId = localStorage.getItem('userId'); 
+const userId = localStorage.getItem('user_id');
+
+if (!userId) {
+  alert("You're not logged in. Please login first.");
+  window.location.href = "login.html";
+}
+
 const cartContainer = document.getElementById('cart-items');
 const checkoutForm = document.getElementById('checkout-form');
 
@@ -39,6 +46,7 @@ async function loadCart() {
       <tr><td colspan="3"><strong>Total</strong></td><td>₹${totalAmount}</td></tr>
     </table>
   `;
+  document.getElementById('total-amount').textContent = totalAmount;
 }
 
 checkoutForm.addEventListener('submit', async (e) => {
@@ -71,8 +79,8 @@ checkoutForm.addEventListener('submit', async (e) => {
 
   alert('Order has been placed successfully!');
 
-  await supabase.from('cart').delete().eq('user_id', userId);
-  window.location.href = 'order-success.html';
+  await supabase.from('cart_items').delete().eq('user_id', userId);
+  window.location.href = 'order_success.html';
 });
 
 loadCart();

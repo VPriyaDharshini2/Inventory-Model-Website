@@ -300,6 +300,7 @@ nav ul li a.active {
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  text-align: center;
 }
 
 .checkout-cart h2,
@@ -337,12 +338,54 @@ nav ul li a.active {
   background-color: #4338ca;
 }
 
-@media (max-width: 768px) {
-  .checkout-grid {
-    grid-template-columns: 1fr;
-  }
+/* Order Success Section */
+.order-success-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 2rem;
+  background-color: var(--bg-color);
 }
 
+.order-success-card {
+  background-color: var(--card-bg);
+  padding: 3rem 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-width: 450px;
+  width: 100%;
+  text-align: center;
+}
+
+.order-success-card h1 {
+  font-size: 1.8rem;
+  color: #22c55e;
+  margin-bottom: 1rem;
+}
+
+.order-success-card p {
+  font-size: 1rem;
+  color: #4b5563;
+  margin-bottom: 2rem;
+}
+
+.order-success-card .btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.order-success-card .btn:hover {
+  background-color: #4338ca;
+}
 
 /* Responsive Layout */
 @media (max-width: 600px) {
@@ -350,6 +393,10 @@ nav ul li a.active {
     flex-direction: column;
     gap: 0.75rem;
     text-align: center;
+  }
+
+  .checkout-grid {
+    grid-template-columns: 1fr;
   }
 }
 
