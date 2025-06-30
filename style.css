@@ -388,15 +388,28 @@ nav ul li a.active {
 }
 
 /* Responsive Layout */
-@media (max-width: 600px) {
-  .cart-summary {
+@media (max-width: 768px) {
+  .navbar {
     flex-direction: column;
-    gap: 0.75rem;
-    text-align: center;
+    align-items: center;
   }
 
-  .checkout-grid {
-    grid-template-columns: 1fr;
+  .product-card {
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 1.5rem;
   }
 }
 
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+
+  .button {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+}
