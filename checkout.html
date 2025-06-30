@@ -6,16 +6,42 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Checkout</h1>
-  <div id="cart-container"></div>
+  <header>
+    <div class="container nav-container">
+      <div class="logo">Inventory Store</div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="cart.html">Cart</a></li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-  <h2>Delivery Information</h2>
-  <form id="checkout-form">
-    <input type="text" id="name" placeholder="Your Name" required />
-    <input type="text" id="address" placeholder="Address" required />
-    <input type="tel" id="contact" placeholder="Contact Number" required />
-    <button type="submit">Place Order</button>
-  </form>
+  <main class="container">
+    <h1 class="section-title">Checkout</h1>
+
+    <div class="checkout-grid">
+      <div class="checkout-cart">
+        <h2>Order Summary</h2>
+        <div id="cart-items" class="cart-grid"></div>
+        <div class="cart-total">
+          <p><strong>Total:</strong> ₹<span id="total-amount">0</span></p>
+        </div>
+      </div>
+
+      <div class="checkout-form-container">
+        <h2>Delivery Details</h2>
+        <form id="checkout-form" class="checkout-form">
+          <input type="text" id="name" placeholder="Your Name" required />
+          <input type="text" id="address" placeholder="Delivery Address" required />
+          <input type="tel" id="contact" placeholder="Contact Number" required />
+          <button type="submit">Place Order</button>
+        </form>
+      </div>
+    </div>
+  </main>
 
   <script type="module" src="checkout.js"></script>
 </body>
